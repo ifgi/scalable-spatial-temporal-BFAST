@@ -53,6 +53,7 @@ RUN echo 'xxxx.xxxx.xxxx'  >> /home/scidb/pass.txt
 RUN mkdir /var/run/sshd
 RUN mkdir /home/scidb/data
 RUN mkdir /home/scidb/catalog
+RUN mkdir /home/scidb/toLoad
 
 
 # Configure SSH
@@ -74,6 +75,8 @@ ADD stopScidb.sh	/home/scidb/stopScidb.sh
 ADD scidb_docker.ini	/home/scidb/scidb_docker.ini
 ADD installPackages.R /home/scidb/installPackages.R
 ADD downloaddata.sh /home/scidb/downloaddata.sh
+ADD removeArrayVersions.sh /home/scidb/removeArrayVersions.sh
+ADD createArray.afl /home/scidb/createArray.afl
 ADD installParallel.sh		/root/installParallel.sh
 ADD installBoost_1570.sh	/root/installBoost_1570.sh
 ADD installGribModis2SciDB.sh	/root/installGribModis2SciDB.sh

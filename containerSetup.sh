@@ -98,6 +98,36 @@ iquery -aq "scan(TEST_ARRAY)"
 #********************************************************
 echo "***** ***** Downloading MODIS data..."
 #********************************************************
+cd ~ 
+./downloaddata.sh 
+#********************************************************
+echo "***** ***** Downloading required scripts..."
+#********************************************************
+git clone http://github.com/albhasan/modis2scidb.git
+#********************************************************
+echo "***** ***** Creating arrays..."
+#********************************************************
+iquery -af /home/scidb/createArray.afl
+#********************************************************
+echo "***** ***** Loading data to arrays..."
+#********************************************************
+python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/toLoad/ /home/scidb/modis2scidb/ MOD09Q1_MENG_20140416 MOD09Q1 &
+find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/toLoad/ MOD09Q1
+#********************************************************
+echo "***** ***** Waiting to finish uploading files to SciDB..."
+#********************************************************
+COUNTER=$(find /home/scidb/toLoad/ -type f -name '*.sdbbin' -print | wc -l)
+while [  $COUNTER -gt 0 ]; do
+	echo "Waiting to finish uploading files to SciDB. Files to go... $COUNTER"
+	sleep 60
+	let COUNTER=$(find /home/scidb/toLoad/ -type f -name '*.sdbbin' -print | wc -l)
+done
+#********************************************************
+echo "***** ***** Removing array versions..."
+#********************************************************
+/home/scidb/./removeArrayVersions.sh
+
+
 
 
 rm /home/scidb/pass.txt
