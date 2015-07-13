@@ -10,7 +10,7 @@ if [ "$#" -ne 1 ]; then
     echo "Illegal number of parameters"
 	exit 1
 fi
-ARRAY_NAME==$1
+ARRAY_NAME=$1
 NVERSION=$(iquery -aq "versions($ARRAY_NAME);" | wc -l)
 let NVERSION=$(($NVERSION - 2))
 IQUERYCMD="iquery -aq \"remove_versions($ARRAY_NAME, $NVERSION);\""
