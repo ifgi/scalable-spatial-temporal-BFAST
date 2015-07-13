@@ -4,7 +4,6 @@ echo "##################################################"
 echo "SET UP SCIDB 14 ON A DOCKER CONTAINER"
 echo "##################################################"
 
-
 apt-get -qq update && apt-get install --fix-missing -y --force-yes \
 	apt-utils \
 	build-essential \
@@ -18,7 +17,6 @@ apt-get -qq update && apt-get install --fix-missing -y --force-yes \
 	libicu-dev \
 	libbz2-dev \
 	libzip-dev
-
 
 #********************************************************
 echo "***** Update container-user ID to match host-user ID..."
@@ -62,12 +60,13 @@ yes | ./cluster_install -s /home/scidb/scidb_docker.ini
 #********************************************************
 echo "***** Installing additional packages..."
 #********************************************************
-Rscript /home/scidb/installPackages.R packages=scidb verbose=0 quiet=0
+Rscript /home/scidb/installPackages.R packages=scidb,Rserve verbose=0 quiet=0
 yes | /root/./installParallel.sh
 yes | /root/./installBoost_1570.sh 
 yes | /root/./installGribModis2SciDB.sh
 ldconfig
-cp /root/libgeosdb.so /opt/scidb/14.8/lib/scidb/plugins
+cp /root/libr_exec.so /opt/scidb/14.8/lib/scidb/plugins
+R CMD Rserve
 #********************************************************
 echo "***** Installing SHIM..."
 #********************************************************
@@ -92,9 +91,11 @@ yes | scidb.py initall scidb_docker
 #********************************************************
 echo "***** ***** Testing installation using IQuery..."
 #********************************************************
-iquery -naq "store(build(<num:double>[x=0:4,1,0, y=0:6,1,0], random()),TEST_ARRAY)"
-iquery -aq "list('arrays')"
-iquery -aq "scan(TEST_ARRAY)"
+iquery -naq "store(build(<num:double>[x=0:4,1,0, y=0:6,1,0], random()),TEST_ARRAY);"
+iquery -aq "list('arrays');"
+iquery -aq "scan(TEST_ARRAY);"
+iquery -aq "load_library('r_exec');"
+iquery -aq "r_exec(build(<z:double>[i=1:100,10,0],0),\'expr=x<-runif(1000);y<-runif(1000);list(sum(x^2+y^2<1)/250)\');"
 #********************************************************
 echo "***** ***** Downloading MODIS data..."
 #********************************************************
@@ -125,8 +126,15 @@ done
 #********************************************************
 echo "***** ***** Removing array versions..."
 #********************************************************
-/home/scidb/./removeArrayVersions.sh
+/home/scidb/./removeArrayVersions.sh MOD09Q1
 
+
+
+
+#********************************************************
+echo "***** ***** Executing BFAST..."
+#********************************************************
+# add Meng's script here
 
 
 

@@ -80,7 +80,7 @@ ADD createArray.afl /home/scidb/createArray.afl
 ADD installParallel.sh		/root/installParallel.sh
 ADD installBoost_1570.sh	/root/installBoost_1570.sh
 ADD installGribModis2SciDB.sh	/root/installGribModis2SciDB.sh
-ADD libgeosdb.so /root/libgeosdb.so
+ADD libr_exec.so /root/libr_exec.so
 
 
 RUN chown -R root:root /root/*
