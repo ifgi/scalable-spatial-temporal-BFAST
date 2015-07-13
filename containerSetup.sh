@@ -111,7 +111,7 @@ iquery -af /home/scidb/createArray.afl
 #********************************************************
 echo "***** ***** Loading data to arrays..."
 #********************************************************
-python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/toLoad/ /home/scidb/modis2scidb/ MOD09Q1_MENG_20140416 MOD09Q1 &
+python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/toLoad/ /home/scidb/modis2scidb/ MOD09Q1 MOD09Q1 &
 find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/toLoad/ MOD09Q1
 #********************************************************
 echo "***** ***** Waiting to finish uploading files to SciDB..."
