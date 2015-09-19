@@ -1,5 +1,5 @@
 auth=login
 ports=8083s
 scidbport=1239
+tmp=/tmp/
 user=root
-tmp=/tmp

@@ -15,8 +15,8 @@ RANGE_MONTHS={0..1}{0..9}
 RANGE_DAYS={0..3}{0..9}
 TEST=--dry-run
 
-
+# test the commands sent to the OS
 #parallel -j 8 --no-notice $TEST wget -r -np --retry-connrefused --wait=1 --directory-prefix $OUT_FOLDER --accept  $PRODUCT.$FILE_FILTER.$TILE_FILTER* $BASE_URL/$PRODUCT.$COLLECTION/{1}.$RANGE_MONTHS.$RANGE_DAYS/ ::: {2000..2014}
+
+# dowload MODIS images
 parallel -j 8 --no-notice wget -r -np --retry-connrefused --wait=1 --directory-prefix $OUT_FOLDER --accept  $PRODUCT.$FILE_FILTER.$TILE_FILTER* $BASE_URL/$PRODUCT.$COLLECTION/{1}.$RANGE_MONTHS.$RANGE_DAYS/ ::: {2000..2015}
-
-

@@ -2,12 +2,14 @@
 # INSTALL PACKAGES
 #Rscript installPackages.R packages=RCurl,snow,ptw,bitops,mapdata,XML,rgeos,rgdal,MODIS,scidb verbose=0 quiet=0
 ###########################################################
-repositories <- c("http://cran.us.r-project.org", 
-           "http://cran.r-mirror.de/", 
-           "http://www.laqee.unal.edu.co/CRAN/", 
+repositories <- c("http://cran.rstudio.com", 
+           "http://cran.us.r-project.org",
+           "http://cran.r-mirror.de/",
+           "http://www.vps.fmvz.usp.br/CRAN/",
+           "http://www.laqee.unal.edu.co/CRAN/",
            "http://ftp.iitm.ac.in/cran/",
            "http://cran.mirror.ac.za/",
-           "http://cran.ms.unimelb.edu.au/", 
+           "http://cran.ms.unimelb.edu.au/",
            "http://R-Forge.R-project.org")
 
 #Get arguments
@@ -21,7 +23,7 @@ for (arg in commandArgs()){
     keys <- append(keys, pair[1], after = length(pair))
     values <- append(values, pair[2], after = length(pair))
   }
-}		  
+}
 
 packages <- unlist(strsplit(values[which(keys == "packages")],  ","))
 #repositories <- unlist(strsplit(values[which(keys == "repositories")], ","))

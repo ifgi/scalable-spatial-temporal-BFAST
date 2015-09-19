@@ -1,7 +1,10 @@
 #!/bin/bash
+echo "##################################################"
+echo "INSTALL GNU PARALLEL"
+echo "##################################################"
 mkdir ~/install_parallel
 cd ~/install_parallel
-wget http://ftp.gnu.org/gnu/parallel/parallel-20140922.tar.bz2 
+wget http://ftp.gnu.org/gnu/parallel/parallel-20140922.tar.bz2
 tar -xvjf parallel*
 cd parallel*
 #less README

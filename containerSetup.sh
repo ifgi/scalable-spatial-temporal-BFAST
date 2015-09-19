@@ -1,22 +1,23 @@
 #!/bin/bash
-export LC_ALL="en_US.UTF-8"
-echo "##################################################"
-echo "SET UP SCIDB 14 ON A DOCKER CONTAINER"
-echo "##################################################"
+	export LC_ALL="en_US.UTF-8"
+	echo "##################################################"
+	echo "SET UP SCIDB 14 ON A DOCKER CONTAINER"
+	echo "##################################################"
 
-apt-get -qq update && apt-get install --fix-missing -y --force-yes \
-	apt-utils \
-	build-essential \
-	cmake \
-	libgdal-dev \
-	gdal-bin \
-	g++ \
-	python-dev \
-	autotools-dev \
-	gfortran \
-	libicu-dev \
-	libbz2-dev \
-	libzip-dev
+	apt-get -qq update && apt-get install --fix-missing -y --force-yes \
+		apt-utils \
+		build-essential \
+		cmake \
+		libgdal-dev \
+		gdal-bin \
+		g++ \
+		python-dev \
+		autotools-dev \
+		gfortran \
+		libicu-dev \
+		libbz2-dev \
+		libzip-dev
+
 
 #********************************************************
 echo "***** Update container-user ID to match host-user ID..."
@@ -30,12 +31,19 @@ groupmod -g $NEW_SCIDB_GID scidb
 find / -uid $OLD_SCIDB_UID -exec chown -h $NEW_SCIDB_UID {} +
 find / -gid $OLD_SCIDB_GID -exec chgrp -h $NEW_SCIDB_GID {} +
 #********************************************************
+echo "***** Creating local directories..."
+#********************************************************
+mkdir /home/scidb/data/catalog
+mkdir /home/scidb/data/toLoad
+chown scidb:scidb /home/scidb/data/catalog
+chown scidb:scidb /home/scidb/data/toLoad
+#********************************************************
 echo "***** Moving PostGres files..."
 #********************************************************
 /etc/init.d/postgresql stop
-cp -aR /var/lib/postgresql/8.4/main /home/scidb/catalog/main
+cp -aR /var/lib/postgresql/8.4/main /home/scidb/data/catalog/main
 rm -rf /var/lib/postgresql/8.4/main
-ln -s /home/scidb/catalog/main /var/lib/postgresql/8.4/main
+ln -s /home/scidb/data/catalog/main /var/lib/postgresql/8.4/main
 /etc/init.d/postgresql start
 #********************************************************
 echo "***** Setting up passwordless SSH..."
@@ -55,17 +63,29 @@ EOF
 echo "***** Installing SciDB..."
 #********************************************************
 cd ~
-cd /root/deployment/deployment/cluster_install
-yes | ./cluster_install -s /home/scidb/scidb_docker.ini
+wget -O- https://downloads.paradigm4.com/key | sudo apt-key add -
+cat  /etc/apt/sources.list.d/scidb.list
+echo "deb https://downloads.paradigm4.com/ ubuntu12.04/14.12/" >> /etc/apt/sources.list.d/scidb.list
+echo "deb-src https://downloads.paradigm4.com/ ubuntu12.04/14.12/">> /etc/apt/sources.list.d/scidb.list
+apt-get update
+apt-cache search scidb
+yes | apt-get install scidb-14.12-all-coord # On the coordinator server only
+#yes | apt-get install scidb-14.12-all # On all servers other than the coordinator server
+/etc/init.d/postgresql restart
+/etc/init.d/postgresql status
+cp /home/scidb/scidb_docker.ini /opt/scidb/14.12/etc/config.ini
+cd /tmp && sudo -u postgres /opt/scidb/14.12/bin/scidb.py init_syscat sdb_doc_sstbfast
 #********************************************************
-echo "***** Installing additional packages..."
+echo "***** Installing additional stuff..."
 #********************************************************
+cd ~
+yes | /root/./installR.sh
 Rscript /home/scidb/installPackages.R packages=scidb,Rserve verbose=0 quiet=0
 yes | /root/./installParallel.sh
-yes | /root/./installBoost_1570.sh 
+yes | /root/./installBoost_1570.sh
 yes | /root/./installGribModis2SciDB.sh
 ldconfig
-cp /root/libr_exec.so /opt/scidb/14.8/lib/scidb/plugins
+cp /root/libr_exec.so /opt/scidb/14.12/lib/scidb/plugins
 R CMD Rserve
 #********************************************************
 echo "***** Installing SHIM..."
@@ -82,12 +102,17 @@ rm ubuntu_12.04_shim_14.12_amd64.deb
 #sudo su scidb
 su scidb <<'EOF'
 cd ~
+#********************************************************
+echo "***** ***** Environment variables for user scidb..."
+#********************************************************
+/home/scidb/./setEnvironment.sh
 source ~/.bashrc
 #********************************************************
 echo "***** ***** Starting SciDB..."
 #********************************************************
-yes | scidb.py initall scidb_docker
+cd ~
 /home/scidb/./startScidb.sh
+sed -i -e 's/yes/#yes/g' /home/scidb/startScidb.sh
 #********************************************************
 echo "***** ***** Testing installation using IQuery..."
 #********************************************************
@@ -95,12 +120,12 @@ iquery -naq "store(build(<num:double>[x=0:4,1,0, y=0:6,1,0], random()),TEST_ARRA
 iquery -aq "list('arrays');"
 iquery -aq "scan(TEST_ARRAY);"
 iquery -aq "load_library('r_exec');"
-iquery -aq "r_exec(build(<z:double>[i=1:100,10,0],0),\'expr=x<-runif(1000);y<-runif(1000);list(sum(x^2+y^2<1)/250)\');"
+iquery -aq "r_exec(build(<z:double>[i=1:100,10,0],0),'expr=x<-runif(1000);y<-runif(1000);list(sum(x^2+y^2<1)/250)');"
 #********************************************************
 echo "***** ***** Downloading MODIS data..."
 #********************************************************
-cd ~ 
-./downloaddata.sh 
+cd ~
+./downloaddata.sh
 #********************************************************
 echo "***** ***** Downloading required scripts..."
 #********************************************************
@@ -112,8 +137,8 @@ iquery -af /home/scidb/createArray.afl
 #********************************************************
 echo "***** ***** Loading data to arrays..."
 #********************************************************
-python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/toLoad/ /home/scidb/modis2scidb/ MOD09Q1 MOD09Q1 &
-find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/toLoad/ MOD09Q1
+python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/data/toLoad/ /home/scidb/modis2scidb/ MOD09Q1 MOD09Q1 &
+find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/data/toLoad/ MOD09Q1
 #********************************************************
 echo "***** ***** Waiting to finish uploading files to SciDB..."
 #********************************************************
@@ -127,14 +152,18 @@ done
 echo "***** ***** Removing array versions..."
 #********************************************************
 /home/scidb/./removeArrayVersions.sh MOD09Q1
-
-
-
-
 #********************************************************
 echo "***** ***** Executing BFAST..."
 #********************************************************
-# add Meng's script here
+
+
+
+
+
+Rscript rexec_sar_efp_f.R
+Rscript reprosarefp.R
+
+
 
 
 
