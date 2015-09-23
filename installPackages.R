@@ -2,14 +2,7 @@
 # INSTALL PACKAGES
 #Rscript installPackages.R packages=RCurl,snow,ptw,bitops,mapdata,XML,rgeos,rgdal,MODIS,scidb verbose=0 quiet=0
 ###########################################################
-repositories <- c("http://cran.rstudio.com", 
-           "http://cran.us.r-project.org",
-           "http://cran.r-mirror.de/",
-           "http://www.vps.fmvz.usp.br/CRAN/",
-           "http://www.laqee.unal.edu.co/CRAN/",
-           "http://ftp.iitm.ac.in/cran/",
-           "http://cran.mirror.ac.za/",
-           "http://cran.ms.unimelb.edu.au/",
+repositories <- c("http://cran.rstudio.com",
            "http://R-Forge.R-project.org")
 
 #Get arguments

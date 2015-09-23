@@ -1,1 +1,1 @@
-CREATE ARRAY MOD09Q1 <red:int16, nir:int16, quality:uint16> [col_id=57600:62399, 512, 0, row_id=48000:52799, 512, 0, time_id=0:9200, 1, 0];
+CREATE ARRAY MOD09Q1 <red:int16, nir:int16, quality:uint16> [col_id=57600:62399, 502, 5, row_id=48000:52799, 502, 5, time_id=0:9200, 1, 0];

@@ -3,13 +3,12 @@
 echo "##################################################"
 echo "INSTALL MODIS2SCIDB BY GRIBEIRO"
 echo "##################################################"
-sudo apt-get install apt-utils
-sudo apt-get install uild-essential
-sudo apt-get install cmake
-sudo apt-get install libgdal-dev
-sudo apt-get install gdal-bin
-#sudo apt-get install libboost-all-dev
-
+#sudo apt-get install apt-utils
+#sudo apt-get install build-essential
+#sudo apt-get install cmake
+#sudo apt-get install libgdal-dev
+#sudo apt-get install gdal-bin
+##sudo apt-get install libboost-all-dev
 
 mkdir gribeiro
 mkdir gribeiro/build-linux
