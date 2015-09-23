@@ -67,9 +67,9 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
 
 <h3>Instructions:</h3>
 <ol>
-	<li>Clone the project and then go to the docker_scidb folder: <code>git clone https://github.com/ifgi/scalable-spatial-temporal-BFAST.git</code></li>
+	<li>Clone the project and then go to the cloned folder: <code>git clone https://github.com/ifgi/scalable-spatial-temporal-BFAST.git</code></li>
 	<li>Modify the configuration file <em>scidb_docker.ini</em> according to your needs and your hardware.</li>
 	<li>Enable <code>setup.sh</code> for execution <code>chmod +x setup.sh</code> and run it <code>./setup.sh</code>. This creates a new Docker image from the Dockerfile and then starts a container.</li>
 	<li>Log into the container: <code>ssh -p 49905 root@localhost</code>. The default password is <em>xxxx.xxxx.xxxx</em></li>
-	<li>Execute the script <code>/home/root/./containerSetup.sh</code>. This script sets SciDB, donwloads MODIS data, uploads the data to SciDB, and then executes the experiment.</li>
+	<li>Execute the script <code>/root/./containerSetup.sh</code>. This script sets SciDB, downloads MODIS data to SciDB, and finally executes the experiment.</li>
 </ol>
