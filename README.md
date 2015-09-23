@@ -8,7 +8,6 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
 <ul>
 	<li><code>LICENSE</code> - License file.</li>
 	<li><code>README.md</code> - This file.</li>
-	<li><code>conf</code> - SHIM configuration file.</li>
 	<li>Docker files:
 		<ul>
 			<li><code>Dockerfile</code> - Script for building a Docker Image.</li>
