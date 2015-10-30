@@ -3,6 +3,10 @@ scidbconnect("localhost", 8083, "scidb", "xxxx.xxxx.xxxx")
 #########################################
 ######  subset and prepare scidb array ##
 #########################################
+
+
+# NOTE: Adjust the schema accordingly. Meng uses this query to remove overlap
+# => remove overlap since data load
 iquery("
        store(
        project(
@@ -11,9 +15,8 @@ iquery("
        apply(
        subarray(
        repart(
-       MOD09Q1,
-       <red:int16,nir:int16,quality:uint16> [col_id=58828:59679,502,0,row_id=48103:49050,502,0,time_id=0:9200,1,0]),
-
+       MOD09Q1_JUARA,
+       <red:int16,nir:int16,quality:uint16> [col_id=57600:62399,502,5,row_id=48000:52799,502,5,time_id=0:9200,1,0]),
        58930,48210,6,59079,48359,643),
        evi2,2.5*((nir*0.0001-red*0.0001)/(nir*0.0001+2.4*red*0.0001+1.0))),
        <red:int16,nir:int16,quality:uint16,evi2:double>[col_id=0:149,1,1,row_id=0:149,1,1,time_id=0:637,638,0]),

@@ -43,7 +43,7 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
         </ul>
       </li>
 
-      <li>Scrpts for running the expriement:
+      <li>Scripts for running the expriement:
         <ul>
           <li><code>reprosarefp.R</code> - .</li>
           <li><code>rexec_sar_efp_f.R</code> - .</li>

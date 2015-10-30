@@ -33,6 +33,7 @@ RUN apt-get -qq update && apt-get install --fix-missing -y --force-yes --allow-u
 	postgresql-8.4 \
 	sshpass \
 	git-core \
+	bzip2 \
 	apt-transport-https \
 	net-tools \
 	imagemagick

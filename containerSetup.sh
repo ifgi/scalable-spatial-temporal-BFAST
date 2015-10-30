@@ -9,6 +9,7 @@
 		build-essential \
 		cmake \
 		libgdal-dev \
+		libproj-dev \
 		gdal-bin \
 		g++ \
 		python-dev \
@@ -80,12 +81,23 @@ echo "***** Installing additional stuff..."
 #********************************************************
 cd ~
 yes | /root/./installR.sh
-Rscript /home/scidb/installPackages.R packages=scidb,Rserve verbose=0 quiet=0
+
+
+Rscript /home/scidb/installPackages.R packages=spdep,bfast,forecast,sandwich,scidb,Rserve verbose=0 quiet=0
+git clone https://github.com/mengluchu/strucchange.git
+git clone https://github.com/mengluchu/bfast2.git
+R CMD INSTALL strucchange/
+R CMD INSTALL bfast2/
+
+
 yes | /root/./installParallel.sh
 yes | /root/./installBoost_1570.sh
 yes | /root/./installGribModis2SciDB.sh
 ldconfig
 cp /root/libr_exec.so /opt/scidb/14.12/lib/scidb/plugins
+#********************************************************
+echo "***** Starting RSERVE..."
+#********************************************************
 R CMD Rserve
 #********************************************************
 echo "***** Installing SHIM..."
@@ -155,6 +167,12 @@ echo "***** ***** Removing array versions..."
 #********************************************************
 echo "***** ***** Executing BFAST..."
 #********************************************************
+
+
+# Subset just Juara
+iquery -naq "store(between(MOD09Q1, 58828, 48103, 0, 59679, 49050, 9200), MOD09Q1_JUARA);"
+# Redimension
+iquery -naq "store(repart(MOD09Q1_JUARA, <red:int16,nir:int16,quality:uint16> [col_id=57600:62399,502,5,row_id=48000:52799,502,5,time_id=0:9200,1,0]),  MOD09Q1_repart);"
 
 
 
