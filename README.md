@@ -3,7 +3,6 @@ Scalable spatial-temporal BFAST
 
 Reproduction of the computations on the article "Spatio-Temporal Change Detection from Multidimensional Arrays: detecting deforestation from MODIS time series"
 
-
 <h3>Files:</h3>
 <ul>
 	<li><code>LICENSE</code> - License file.</li>
@@ -11,7 +10,7 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
 	<li>Docker files:
 		<ul>
 			<li><code>Dockerfile</code> - Script for building a Docker Image.</li>
-			<li><code>setup.sh</code> - Host script for removing former containers and images from host machine. Then, it creates a Docker image called "scidb_img".</li>
+			<li><code>setup.sh</code> - Host script for removing former containers and images from host machine. Then, it creates a Docker image called "sstbfast_img".</li>
 		</ul>
 	</li>
 	<li>Container files:
@@ -39,17 +38,16 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
           <li><code>installPackages.R</code> - R script for installing R packages.</li>
           <li><code>installParallel.sh</code> - Script for installing GNU Parallel.</li>
           <li><code>installR.sh</code> - Script for installing R.</li>
-          <li><code>libr_exec.so</code> - Precompiled <i>r_exec</i> library for SciDB.</li>
+          <li><code>libr_exec.so</code> - Precompiled <i>r_exec</i> library for SciDB 14.12.</li>
         </ul>
       </li>
 
       <li>Scripts for running the expriement:
         <ul>
-          <li><code>reprosarefp.R</code> - .</li>
-          <li><code>rexec_sar_efp_f.R</code> - .</li>
+          <li><code>reprosarefp.R</code> - Main R script of Scalable spatial-temporal BFAST.</li>
+          <li><code>rexec_sar_efp_f.R</code> - Auxiliary R script of Scalable spatial-temporal BFAST.</li>
           </ul>
         </li>
-
 		</ul>
 	</li>
 </ul>
@@ -57,15 +55,17 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
 
 
 <h3>Pre-requisites:</h3>
-  <ul>
-    <li>Internet access</li>
-    <li>Docker.io</li>
+<ul>
+  <li>Internet access</li>
+  <li>Docker.io</li>
   <li>SSH</li>
+	<li>The host's ports 49905 and 49905 must be available.</li>
 </ul>
 
 
 
 <h3>Instructions:</h3>
+<b>NOTE</b>: The execution of these scripts can span for several days.</br>
 <ol>
 	<li>Clone the project and then go to the cloned folder: <code>git clone https://github.com/ifgi/scalable-spatial-temporal-BFAST.git</code></li>
 	<li>Modify the configuration file <em>scidb_docker.ini</em> according to your needs and your hardware.</li>
