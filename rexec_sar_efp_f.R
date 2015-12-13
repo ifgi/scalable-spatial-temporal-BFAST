@@ -1,5 +1,7 @@
 library(scidb)
-scidbconnect("localhost", 8083, "scidb", "xxxx.xxxx.xxxx")
+#scidbconnect("localhost", 8083, "scidb", "xxxx.xxxx.xxxx")
+scidbconnect()
+scidblist()
 #########################################
 ######  subset and prepare scidb array ##
 #########################################

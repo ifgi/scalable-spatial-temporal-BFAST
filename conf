@@ -1,5 +1,9 @@
-auth=login
-ports=8083s
-scidbport=1239
-tmp=/tmp/
-user=root
+# Shim configuration file
+# Uncomment and change any of the following values. Restart shim for
+# your changes to take effect (default values are shown).
+
+#auth=login
+#ports=8080,8083s
+#scidbport=1239
+#tmp=/tmp/
+#user=root

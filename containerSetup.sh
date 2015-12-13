@@ -1,23 +1,23 @@
 #!/bin/bash
-	export LC_ALL="en_US.UTF-8"
-	echo "##################################################"
-	echo "SET UP SCIDB 14 ON A DOCKER CONTAINER"
-	echo "##################################################"
+export LC_ALL="en_US.UTF-8"
+echo "##################################################"
+echo "SET UP SCIDB 14 ON A DOCKER CONTAINER"
+echo "##################################################"
 
-	apt-get -qq update && apt-get install --fix-missing -y --force-yes \
-		apt-utils \
-		build-essential \
-		cmake \
-		libgdal-dev \
-		libproj-dev \
-		gdal-bin \
-		g++ \
-		python-dev \
-		autotools-dev \
-		gfortran \
-		libicu-dev \
-		libbz2-dev \
-		libzip-dev
+apt-get -qq update && apt-get install --fix-missing -y --force-yes \
+	apt-utils \
+	build-essential \
+	cmake \
+	libgdal-dev \
+	libproj-dev \
+	gdal-bin \
+	g++ \
+	python-dev \
+	autotools-dev \
+	gfortran \
+	libicu-dev \
+	libbz2-dev \
+	libzip-dev
 
 
 #********************************************************
@@ -106,7 +106,7 @@ cd ~
 wget http://paradigm4.github.io/shim/ubuntu_12.04_shim_14.12_amd64.deb
 yes | gdebi -q ubuntu_12.04_shim_14.12_amd64.deb
 rm /var/lib/shim/conf
-	mv /root/conf /var/lib/shim/conf
+mv /root/conf /var/lib/shim/conf
 rm ubuntu_12.04_shim_14.12_amd64.deb
 /etc/init.d/shimsvc stop
 /etc/init.d/shimsvc start
@@ -149,8 +149,9 @@ iquery -af /home/scidb/createArray.afl
 #********************************************************
 echo "***** ***** Loading data to arrays..."
 #********************************************************
-python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/data/toLoad/ /home/scidb/modis2scidb/ MOD09Q1 MOD09Q1 &
-find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/data/toLoad/ MOD09Q1
+mkdir /home/scidb/toLoad/
+python /home/scidb/modis2scidb/checkFolder.py --log DEBUG /home/scidb/toLoad/ /home/scidb/modis2scidb/ MOD09Q1 MOD09Q1 &
+find /home/scidb/e4ftl01.cr.usgs.gov/MOLT/MOD09Q1.005/ -type f -name '*h12v10**.hdf' -print | parallel -j +0 --no-notice --xapply python /home/scidb/modis2scidb/hdf2sdbbin.py --log DEBUG {} /home/scidb/toLoad/ MOD09Q1
 #********************************************************
 echo "***** ***** Waiting to finish uploading files to SciDB..."
 #********************************************************
@@ -167,12 +168,10 @@ echo "***** ***** Removing array versions..."
 #********************************************************
 echo "***** ***** Executing BFAST..."
 #********************************************************
-
-
 # Subset just Juara
 iquery -naq "store(between(MOD09Q1, 58828, 48103, 0, 59679, 49050, 9200), MOD09Q1_JUARA);"
 # Redimension
-iquery -naq "store(repart(MOD09Q1_JUARA, <red:int16,nir:int16,quality:uint16> [col_id=57600:62399,502,5,row_id=48000:52799,502,5,time_id=0:9200,1,0]),  MOD09Q1_repart);"
+# iquery -naq "store(repart(MOD09Q1_JUARA, <red:int16,nir:int16,quality:uint16> [col_id=57600:62399,502,5,row_id=48000:52799,502,5,time_id=0:9200,1,0]),  MOD09Q1_repart);"
 
 
 
