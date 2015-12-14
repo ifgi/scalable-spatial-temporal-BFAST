@@ -69,7 +69,8 @@ generatemapRAS1(ptssarar2,groundtruth,prodespoints00)
 #spplot(raster(tssarar4s==0.01)) 
 #length(which(tssarar2s<0.05,arr.ind=TRUE))
 
-#takes a week to run,checked  
+#reproduce with R 
+#takes a week to run   
 #tsall<-SARefpdents(inputarray=fevi8, le=636)
 #tssarar1<-tsall[[1]]
 #tssarar2<-tsall[[2]]
