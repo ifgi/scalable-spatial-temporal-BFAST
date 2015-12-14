@@ -46,6 +46,7 @@ Reproduction of the computations on the article "Spatio-Temporal Change Detectio
         <ul>
           <li><code>reprosarefp.R</code> - Main R script of Scalable spatial-temporal BFAST.</li>
           <li><code>rexec_sar_efp_f.R</code> - Auxiliary R script of Scalable spatial-temporal BFAST.</li>
+					<li><code>SAR_efp_R.R</code> - R script for processing Scalable spatial-temporal BFAST without using SciDB. <b>NOTE</b>: This script is provided for comparing the results.</li>
           </ul>
         </li>
 		</ul>
